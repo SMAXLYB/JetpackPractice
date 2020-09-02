@@ -1,3 +1,3 @@
 # JetpackPractice
 This is a practice demo with jetpack
-see https://github.com/SMAXLYB/JetpackPractice/wiki
+see [Wiki](https://github.com/SMAXLYB/JetpackPractice/wiki)
