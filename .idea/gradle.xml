@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/LifeCycleDemo" />
             <option value="$PROJECT_DIR$/NavigationDemo" />
+            <option value="$PROJECT_DIR$/ViewModelDemo" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
