@@ -32,9 +32,7 @@ class TimerViewModel(private val state: SavedStateHandle) : ViewModel() {
             val timerTask = timerTask {
                 getNum()?.let {
                     state.set(CURRENT_SECOND,it+1)
-                }
-                if (mOnTimeChangeListener != null) {
-                    getNum()?.let { mOnTimeChangeListener.invoke(it) }
+                    mOnTimeChangeListener.invoke(it)
                 }
             }
 

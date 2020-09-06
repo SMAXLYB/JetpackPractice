@@ -1,7 +1,7 @@
 package cn.smaxlyb.viewmodeldemo
 
 import android.os.Bundle
-import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun iniComponent() {
-        val tvTime = findViewById<TextView>(R.id.tvTime)
+        val tvTime = findViewById<Button>(R.id.tvTime)
 
         val timerViewModel = ViewModelProvider(this)[TimerViewModel::class.java]
         timerViewModel.setOnTimeChangeListener { time ->
