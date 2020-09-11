@@ -1,0 +1,206 @@
+/*
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package androidx.core.app;
+
+import static androidx.annotation.Dimension.DP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.SystemClock;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.TextAppearanceSpan;
+import android.util.SparseArray;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.RemoteViews;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RestrictTo;
+import androidx.core.R;
+import androidx.core.graphics.drawable.IconCompat;
+import androidx.core.text.BidiFormatter;
+import androidx.core.view.GravityCompat;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Helper for accessing features in {@link android.app.Notification}.
+ */
+public class NotificationCompat {
+
+    /**
+     * Use all default values (where applicable).
+     */
+    public static final int DEFAULT_ALL = ~0;
+
+    /**
+     * Use the default notification sound. This will ignore any sound set using
+     * {@link Builder#setSound}
+     *
+     * <p>
+     * A notification that is noisy is more likely to be presented as a heads-up notification,
+     * on some platforms.
+     * </p>
+     *
+     * @see Builder#setDefaults
+     */
+    public static final int DEFAULT_SOUND = 1;
+
+    /**
+     * Use the default notification vibrate. This will ignore any vibrate set using
+     * {@link Builder#setVibrate}. Using phone vibration requires the
+     * {@link android.Manifest.permission#VIBRATE VIBRATE} permission.
+     *
+     * <p>
+     * A notification that vibrates is more likely to be presented as a heads-up notification,
+     * on some platforms.
+     * </p>
+     *
+     * @see Builder#setDefaults
+     */
+    public static final int DEFAULT_VIBRATE = 2;
+
+    /**
+     * Use the default notification lights. This will ignore the
+     * {@link #FLAG_SHOW_LIGHTS} bit, and values set with {@link Builder#setLights}.
+     *
+     * @see Builder#setDefaults
+     */
+    public static final int DEFAULT_LIGHTS = 4;
+
+    /**
+     * Use this constant as the value for audioStreamType to request that
+     * the default stream type for notifications be used.  Currently the
+     * default stream type is {@link AudioManager#STREAM_NOTIFICATION}.
+     */
+    public static final int STREAM_DEFAULT = -1;
+    /**
+     * Bit set in the Notification flags field when LEDs should be turned on
+     * for this notification.
+     */
+    public static final int FLAG_SHOW_LIGHTS        = 0x00000001;
+
+    /**
+     * Bit set in the Notification flags field if this notification is in
+     * reference to something that is ongoing, like a phone call.  It should
+     * not be set if this notification is in reference to something that
+     * happened at a particular point in time, like a missed phone call.
+     */
+    public static final int FLAG_ONGOING_EVENT      = 0x00000002;
+
+    /**
+     * Bit set in the Notification flags field if
+     * the audio will be repeated until the notification is
+     * cancelled or the notification window is opened.
+     */
+    public static final int FLAG_INSISTENT          = 0x00000004;
+
+    /**
+     * Bit set in the Notification flags field if the notification's sound,
+     * vibrate and ticker should only be played if the notification is not already showing.
+     */
+    public static final int FLAG_ONLY_ALERT_ONCE    = 0x00000008;
+
+    /**
+     * Bit set in the Notification flags field if the notification should be canceled when
+     * it is clicked by the user.
+     */
+    public static final int FLAG_AUTO_CANCEL        = 0x00000010;
+
+    /**
+     * Bit set in the Notification flags field if the notification should not be canceled
+     * when the user clicks the Clear all button.
+     */
+    public static final int FLAG_NO_CLEAR           = 0x00000020;
+
+    /**
+     * Bit set in the Notification flags field if this notification represents a currently
+     * running service.  This will normally be set for you by
+     * {@link android.app.Service#startForeground}.
+     */
+    public static final int FLAG_FOREGROUND_SERVICE = 0x00000040;
+
+    /**
+     * Obsolete flag indicating high-priority notifications; use the priority field instead.
+     *
+     * @deprecated Use {@link NotificationCompat.Builder#setPriority(int)} with a positive value.
+     */
+    @Deprecated
+    public static final int FLAG_HIGH_PRIORITY      = 0x00000080;
+
+    /**
+     * Bit set in the Notification flags field if this notification is relevant to the current
+     * device only and it is not recommended that it bridge to other devices.
+     */
+    public static final int FLAG_LOCAL_ONLY         = 0x00000100;
+
+    /**
+     * Bit set in the Notification flags field if this notification is the group summary for a
+     * group of notifications. Grouped notifications may display in a cluster or stack on devices
+     * which support such rendering. Requires a group key also be set using
+     * {@link Builder#setGroup}.
+     */
+    public static final int FLAG_GROUP_SUMMARY      = 0x00000200;
+
+    /**
+     * Bit set in the Notification flags field if this notification is showing as a bubble.
+     *
+     * Applications cannot set this flag directly; they should instead call
+     * {@link NotificationCompat.Builder#setBubbleMetadata(BubbleMetadata)} to request that a
+     * notification be displayed as a bubble, and then check this flag to see whether that request
+     * was honored by the system.
+     */
+    public static final int FLAG_BUBBLE             = 0x00001000;
+
+    /**
+     * Default notification priority for {@link NotificationCompat.Builder#setPriority(int)}.
+     * If your application does not prioritize its ow

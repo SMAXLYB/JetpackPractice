@@ -1,0 +1,78 @@
+package cn.smaxlyb.roomdemo
+
+import android.app.AlertDialog
+import android.os.AsyncTask
+import android.os.Bundle
+import android.text.TextUtils
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ListView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import cn.smaxlyb.roomdemo.database.Student
+import cn.smaxlyb.roomdemo.database.StudentDatabase
+import java.util.*
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var mListView: ListView
+    private lateinit var mBtnInsertStudent: Button
+    private lateinit var mStudentList: List<Student>
+    private lateinit var mStudentAdapter: StudentAdapter
+    private lateinit var mStudentDatabase: StudentDatabase
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        initViews()
+        initData()
+        initEvents()
+    }
+
+    private fun initViews() {
+        mListView = findViewById(R.id.lvStudent)
+        mBtnInsertStudent = findViewById(R.id.btnInsertStudent)
+    }
+
+    private fun initData() {
+        mStudentList = ArrayList<Student>()
+        mStudentAdapter = StudentAdapter(this, mStudentList)
+        mListView.adapter = mStudentAdapter
+        mStudentDatabase = StudentDatabase.getDatabase(this)
+    }
+
+    private fun initEvents() {
+        mBtnInsertStudent.setOnClickListener {
+            openAddStudentDialog()
+        }
+
+        mListView.setOnItemLongClickListener { parent, view, position, id ->
+
+            false
+        }
+    }
+
+    private fun openAddStudentDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_student, null)
+        val etName = dialogView.findViewById<EditText>(R.id.et_student_name)
+        val etAge = dialogView.findViewById<EditText>(R.id.et_student_age)
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Add Student")
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                if (TextUtils.isEmpty(etName.text.toString()) &&
+                    TextUtils.isEmpty(etAge.text.toString())
+                ) {
+                    Toast.makeText(this@MainActivity, "输入不能为空", Toast.LENGTH_SHORT).show()
+                } else {
+                    // TODO
+                }
+            }
+            .setNegativeButton("CANCEL") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    class InsertStudentTask(val name: String, val 

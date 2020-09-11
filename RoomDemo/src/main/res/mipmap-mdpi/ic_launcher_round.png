@@ -1,0 +1,123 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package androidx.room;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
+
+import java.io.File;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Executor;
+
+/**
+ * Configuration class for a {@link RoomDatabase}.
+ */
+@SuppressWarnings("WeakerAccess")
+public class DatabaseConfiguration {
+
+    /**
+     * The factory to use to access the database.
+     */
+    @NonNull
+    public final SupportSQLiteOpenHelper.Factory sqliteOpenHelperFactory;
+    /**
+     * The context to use while connecting to the database.
+     */
+    @NonNull
+    public final Context context;
+    /**
+     * The name of the database file or null if it is an in-memory database.
+     */
+    @Nullable
+    public final String name;
+
+    /**
+     * Collection of available migrations.
+     */
+    @NonNull
+    public final RoomDatabase.MigrationContainer migrationContainer;
+
+    @Nullable
+    public final List<RoomDatabase.Callback> callbacks;
+
+    /**
+     * Whether Room should throw an exception for queries run on the main thread.
+     */
+    public final boolean allowMainThreadQueries;
+
+    /**
+     * The journal mode for this database.
+     */
+    public final RoomDatabase.JournalMode journalMode;
+
+    /**
+     * The Executor used to execute asynchronous queries.
+     */
+    @NonNull
+    public final Executor queryExecutor;
+
+    /**
+     * The Executor used to execute asynchronous transactions.
+     */
+    @NonNull
+    public final Executor transactionExecutor;
+
+    /**
+     * If true, table invalidation in an instance of {@link RoomDatabase} is broadcast and
+     * synchronized with other instances of the same {@link RoomDatabase} file, including those
+     * in a separate process.
+     */
+    public final boolean multiInstanceInvalidation;
+
+    /**
+     * If true, Room should crash if a migration is missing.
+     */
+    public final boolean requireMigration;
+
+    /**
+     * If true, Room should perform a destructive migration when downgrading without an available
+     * migration.
+     */
+    public final boolean allowDestructiveMigrationOnDowngrade;
+
+    /**
+     * The collection of schema versions from which migrations aren't required.
+     */
+    private final Set<Integer> mMigrationNotRequiredFrom;
+
+    /**
+     * The assets path to a pre-packaged database to copy from.
+     */
+    @Nullable
+    public final String copyFromAssetPath;
+
+    /**
+     * The pre-packaged database file to copy from.
+     */
+    @Nullable
+    public final File copyFromFile;
+
+
+    /**
+     * Creates a database configuration with the given values.
+     *
+     * @deprecated Use {@link #DatabaseConfiguration(Cont
