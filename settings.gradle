@@ -1,3 +1,5 @@
+include ':WorkManagerDemo'
+include ':RoomDemo'
 include ':LiveDataDemo'
 include ':ViewModelDemo'
 include ':NavigationDemo'
