@@ -1,3 +1,4 @@
+include ':DataBindingDemo'
 include ':WorkManagerDemo'
 include ':RoomDemo'
 include ':LiveDataDemo'

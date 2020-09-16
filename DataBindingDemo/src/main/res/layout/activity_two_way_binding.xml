@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <!--双向绑定,需要手动通知字段-->
+        <!--<variable-->
+        <!--    name="bindingObservable"-->
+        <!--    type="com.example.databindingdemo.twowaybinding.TwoWayBindingObservable" />-->
+
+        <!--双向绑定,无需手动通知字段-->
+        <variable
+            name="bindingObdservableField"
+            type="com.example.databindingdemo.twowaybinding.TwoWayBindingObservableField" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/ed_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={bindingObdservableField.userName}"/>
+
+        <CheckBox
+            android:id="@+id/cb_remember_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={bindingObdservableField.rememberMe}"
+            android:text="勾选同意" />
+
+    </LinearLayout>
+</layout>

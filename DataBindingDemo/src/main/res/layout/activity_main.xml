@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <!--导入类-->
+        <import type="com.example.databindingdemo.BookRatingUtil" />
+
+        <import type="android.view.View" />
+
+        <!--传入数据-->
+        <variable
+            name="book"
+            type="com.example.databindingdemo.Book" />
+
+        <variable
+            name="clickHandler"
+            type="com.example.databindingdemo.MainActivity.ClickHandler" />
+
+        <variable
+            name="networkImage"
+            type="String" />
+
+        <variable
+            name="localImage"
+            type="int" />
+
+        <variable
+            name="imagePadding"
+            type="int" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <!--自定义BindingAdapter-->
+        <!--<ImageView-->
+        <!--    android:layout_width="200dp"-->
+        <!--    android:layout_height="200dp"-->
+        <!--    android:paddingBottom="10dp"-->
+        <!--    app:image="@{networkImage}"/>-->
+        <!--<ImageView-->
+        <!--    android:layout_width="200dp"-->
+        <!--    android:layout_height="200dp"-->
+        <!--    android:paddingBottom="10dp"-->
+        <!--    app:image="@{localImage}"/>-->
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:paddingBottom="10dp"
+            android:visibility="@{checkbox.checked?View.VISIBLE:View.GONE}"
+            app:DefaultImageResource="@{localImage}"
+            app:image="@{networkImage}"
+            app:padding="@{imagePadding}" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!--传给二级页面-->
+        <include
+            layout="@layout/secondary"
+            app:book="@{book}" />
+
+        <TextView
+            android:id="@+id/tv_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{BookRatingUtil.getRatingString(book.rating)}" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{clickHandler::onClick}"
+            android:text="Clicked me" />
+
+    </LinearLayout>
+</layout>
