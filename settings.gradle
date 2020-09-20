@@ -1,3 +1,4 @@
+include ':PagingDemo'
 include ':DataBindingDemo'
 include ':WorkManagerDemo'
 include ':RoomDemo'

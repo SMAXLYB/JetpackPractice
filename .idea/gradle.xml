@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/LifeCycleDemo" />
             <option value="$PROJECT_DIR$/LiveDataDemo" />
             <option value="$PROJECT_DIR$/NavigationDemo" />
+            <option value="$PROJECT_DIR$/PagingDemo" />
             <option value="$PROJECT_DIR$/RoomDemo" />
             <option value="$PROJECT_DIR$/ViewModelDemo" />
             <option value="$PROJECT_DIR$/WorkManagerDemo" />
